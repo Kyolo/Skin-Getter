@@ -29,40 +29,44 @@ import javax.swing.JTextField;
 public class SkinGetter extends JFrame {
 
 	
-	//L'instance du skingetter, une habitude que j'ai prise
+	//Where we stock the SkinGetter, for easier acces
 	public static  SkinGetter skg = null;
 	
 	private static final long serialVersionUID = 1L;
 	private JPanel jp = new JPanel();
-	//Le jpanel sur lequel on affiche le skin
+	
+	//The JPanel on which the skin is displayed
 	private JPanel jp2 = new JPanel(){
 		private static final long serialVersionUID = 1L;
 		
 		@Override
 		public void paintComponent(Graphics g){
-			//On dessine un fond blanc pour vider l'affichage
+			//We draw a white background to clear the display
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			//on dessine le skin si il y en a un
+			//We draw the skin if there is one to draw
 			if(skin != null)
 				g.drawImage(skin, 0, 26,skin.getWidth(this)*5,skin.getHeight(this)*5, this);
 		}
 		
 	};
 	
-	//Les deux boutons utilisés, leurs noms parlent d'eux-même
+	//The used buttons
 	private JButton jb = new JButton("Get skin");
 	private JButton jb2 = new JButton("Save skin");
-	//L'image contenant le skin
+	
+	//The Image which hold the skin
 	private Image skin = null;
-	//Le champ de texte pour indiquer le pseudo
+	
+	//The TextField where inputing the username
 	private JTextField jtf = new JTextField();
 	
-	//Un simple constructeur
+	//A simple contructor
 	public SkinGetter() {
 		start();
 	}
-	//Si un pseudo est passé en parametre, on le charge déjà
+	
+	//If a username is given, we load it right from the start
 	public SkinGetter(String plrName) {
 		start();
 		try {
@@ -77,12 +81,12 @@ public class SkinGetter extends JFrame {
 	}
 
 	private void start() {
-		//On ajoute un KeyListener au champ de texte pour detecter la pression de la touche Entrée
+		//We add a KeyListener to the JTextField to detect if Enter is pressed
 		jtf.addKeyListener(new KeyListener(){
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if(arg0.getKeyCode() == 10) {
-					//Si c'est la touche entrée, on fait un clique sur le bouton pour récupérer le skin
+					//If it's Enter which is pressed, we manualy press the GetSkin button
 					jb.doClick();
 				}
 			}
@@ -90,56 +94,55 @@ public class SkinGetter extends JFrame {
 			public void keyTyped(KeyEvent arg0) {}
 			
 		});
-		//On organise la fenetre
+		//We organize the window
 		jp.setLayout(new BorderLayout());
 		jp.add(jb, BorderLayout.EAST);
 		jp.add(jtf, BorderLayout.CENTER);
 		
-		//On ajoute un ActionListener, pour detecter les clics sur le bouton Get Skin
+		//We add a ActionListener to the Get Skin button
 		jb.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
 				try {
-					//On récupère l'image sur les serveur de mojang
+					//We download the picture of the given player
 					skin = ImageIO.read(new URL("http://skins.minecraft.net/MinecraftSkins/" + jtf.getText() + ".png"));
-					//On rafraichit la fenetre pour l'afficher
+					//We refresh the JPanel to display the skin
 					jp2.repaint();
 				} catch (IOException e) {
-					//On prévient en cas d'erreur
+					//We warn of a potential error
 					JOptionPane.showMessageDialog(SkinGetter.skg, "The skin cannot be found, try to correct the player's name (please notice that the case need to be right)", "Skin not found", JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}
 			
 		});
-		//On ajoute un ActionListener, pour detecter les clics sur me bonton Save Skin
+		//We add an ActionListener, to detect the click on the Save Skin Button
 		jb2.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//On prépare le fichier de reception du skin
+				//We prepare the file which will hold the skin
 				File toSerialize = new File(System.getProperty("user.home") + "/Pictures/" + jtf.getText() + ".png");
 				
-				//JOptionPane.showInputDialog(skg, "Where the file will be saved ?", "Save", JOptionPane.)
+				//(WIP) JOptionPane.showInputDialog(skg, "Where the file will be saved ?", "Save", JOptionPane.)
 				
-				//on vérifie si il existe déjà
+				//We check if the file already exist
 				if(!toSerialize.exists()){
-					//Si il n'existe pas déjà
+					//And if it doesn't...
 					try {
-						toSerialize.createNewFile(); //On crée le fichier
-						ImageIO.write((RenderedImage) skin, "PNG", toSerialize); //On l'enregistre
-						jtf.setText("");//On vide le champ de texte
-						JOptionPane.showMessageDialog(SkinGetter.skg, "Save done !", null, JOptionPane.INFORMATION_MESSAGE); //Et on informe de la réussite
-						
+						toSerialize.createNewFile(); //We create the file
+						ImageIO.write((RenderedImage) skin, "PNG", toSerialize); //We save it
+						jtf.setText("");//We clear the JTextField
+					JOptionPane.showMessageDialog(SkinGetter.skg, "Save done !", null, JOptionPane.INFORMATION_MESSAGE); //And we tell it's done
 					} catch (IOException e) {
-						//En cas d'erreur durant l'écriture on prévient et on écrit le stacktrace dans la console
+						//In case of error, we warn the user and print the StackTrace in the console
 						JOptionPane.showMessageDialog(SkinGetter.skg, "An error has been occured during saving. Please try again", "Error", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
 				}
 				else{
-					//Si l'image est déjà présente, on fait la même chose mais pour des noms différents
+					//If there is already a file by the given name, we try the same things for an other name
 					for(int i=2;i<20;i++){
 						File toSerialize2 = new File(System.getProperty("user.home") + "/Pictures/" + jtf.getText() + " (" + i + ")" + ".png");
 						
@@ -168,7 +171,7 @@ public class SkinGetter extends JFrame {
 			
 		});
 		
-		//On organise la fenêtre
+		//We continue to organize the window
 		jp2.setLayout(new BorderLayout());
 		jp2.add(jp, BorderLayout.SOUTH);
 		jp2.add(jb2, BorderLayout.NORTH);
@@ -179,21 +182,21 @@ public class SkinGetter extends JFrame {
 		this.setResizable(false);
 		this.setTitle("Minecraft Skin Getter");
 		this.setLocationRelativeTo(null);
-		//On donne une icone à la fenêtre, stockée sur ma dropbox
+		//We put a window picture, stored on my Dropbox
 		try {
 			this.setIconImage(ImageIO.read(new URL("https://dl.dropboxusercontent.com/u/109358506/skingetter.png")));
 		} catch (IOException e) {
 			System.err.println("Cannot download the window's icon");
 			e.printStackTrace();
 		}
-		//On stock l'instance du SkinGetter dans une variable static pour y acceder depuis les listeners
+		//We stock the SkinGetter in a static var, for easier acces
 		skg = this;
 		
 		
 	}
 	
 	public static void main(String[] args) {
-		if(args.length == 1){
+		if(args.length == 1){//If a param is given, we use it like a username
 			new SkinGetter(args[0]);
 		}
 		else{
@@ -201,7 +204,5 @@ public class SkinGetter extends JFrame {
 		}
 		
 	}
-	
-	
 
 }
