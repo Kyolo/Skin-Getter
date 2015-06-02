@@ -107,7 +107,7 @@ public class SkinGetter extends JFrame {
 					jp2.repaint();
 				} catch (IOException e) {
 					//On prévient en cas d'erreur
-					JOptionPane.showMessageDialog(SkinGetter.skg, "The skin cannot be found, try to correct the player's name (please notice than the case need to be right)", "Skin not found", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(SkinGetter.skg, "The skin cannot be found, try to correct the player's name (please notice that the case need to be right)", "Skin not found", JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}
