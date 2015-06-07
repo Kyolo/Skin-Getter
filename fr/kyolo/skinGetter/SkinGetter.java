@@ -16,6 +16,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,10 +33,10 @@ public class SkinGetter extends JFrame {
 	public static  SkinGetter SKIN_GETTER = null;
 	
 	private static final long serialVersionUID = 1L;
-	private JPanel mainPanel = new JPanel();
+	private JPanel skinDisplayPanel = new JPanel();
 	
 	//The JPanel on which the skin is displayed
-	private JPanel skinPanel = new JPanel(){
+	private JPanel mainPanel = new JPanel(){
 		private static final long serialVersionUID = 1L;
 		
 		@Override
@@ -70,7 +71,7 @@ public class SkinGetter extends JFrame {
 		start();
 		try {
 			skin = ImageIO.read(new URL("http://skins.minecraft.net/MinecraftSkins/" + plrName + ".png"));
-			mainPanel.repaint();
+			skinDisplayPanel.repaint();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -94,9 +95,9 @@ public class SkinGetter extends JFrame {
 			
 		});
 		//We organize the window
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.add(getButton, BorderLayout.EAST);
-		mainPanel.add(usernameTextField, BorderLayout.CENTER);
+		skinDisplayPanel.setLayout(new BorderLayout());
+		skinDisplayPanel.add(getButton, BorderLayout.EAST);
+		skinDisplayPanel.add(usernameTextField, BorderLayout.CENTER);
 		
 		//We add a ActionListener to the Get Skin button
 		getButton.addActionListener(new ActionListener(){
@@ -107,7 +108,7 @@ public class SkinGetter extends JFrame {
 					//We download the picture of the given player
 					skin = ImageIO.read(new URL("http://skins.minecraft.net/MinecraftSkins/" + usernameTextField.getText() + ".png"));
 					//We refresh the JPanel to display the skin
-					skinPanel.repaint();
+					mainPanel.repaint();
 				} catch (IOException e) {
 					//We warn of a potential error
 					JOptionPane.showMessageDialog(SkinGetter.SKIN_GETTER, "The skin cannot be found, try to correct the player's name (please notice that the case need to be right)", "Skin not found", JOptionPane.ERROR_MESSAGE);
@@ -122,25 +123,36 @@ public class SkinGetter extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				String where = System.getProperty("user.home") + "/Pictures/";
+				//We ask the user in which folder we save the skin
+				String where = getSavingPosition();
 				
-				//(WIP) JOptionPane.showInputDialog(skg, "Where the file will be saved ?", "Save", JOptionPane.)
+				//We check if there isn't any problem
+				if(where!=null){
+					if(where.equals("NOWHERE"))
+						return;
+				}
 				
 				
-				//If there is already a file by the given name, we try the same things for an other name
 				for(int i=0;i<Integer.MAX_VALUE;i++){
+					//We create the name of the file
 					String fileName = usernameTextField.getText()+(i==0 ? "":("("+i+")"));
 					File toSerialize = new File(where + fileName + ".png");
 					
+					//We check if the file already exist
 					if(!toSerialize.exists()){
 						
 						try {
+							//If not we create it
 							toSerialize.createNewFile();
+							//We fill it with the skin data
 							ImageIO.write((RenderedImage) skin, "PNG", toSerialize);
+							//We reset the textfield
 							usernameTextField.setText("");
+							//And we tell the user it's done
 							JOptionPane.showMessageDialog(SkinGetter.SKIN_GETTER, "Save done !", null, JOptionPane.INFORMATION_MESSAGE);
 							
 						} catch (IOException e) {
+							//In case of error we warn the user and print the stacktrace
 							JOptionPane.showMessageDialog(SkinGetter.SKIN_GETTER, "An error has been occured during saving. Please try again", "Error", JOptionPane.ERROR_MESSAGE);
 							e.printStackTrace();
 						}
@@ -156,14 +168,15 @@ public class SkinGetter extends JFrame {
 		});
 		
 		//We continue to organize the window
-		skinPanel.setLayout(new BorderLayout());
-		skinPanel.add(mainPanel, BorderLayout.SOUTH);
-		skinPanel.add(saveButton, BorderLayout.NORTH);
-		this.setContentPane(skinPanel);
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.add(skinDisplayPanel, BorderLayout.SOUTH);
+		mainPanel.add(saveButton, BorderLayout.NORTH);
+		this.setContentPane(mainPanel);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(326, 240);
-		this.setResizable(false);//To avoid scale problem
+		//this.setResizable(false);//To avoid scaling problem
+		this.setResizable(true);//Else it create a bug on my computer
 		this.setTitle("Minecraft Skin Getter");
 		this.setLocationRelativeTo(null);
 		//We put an icon to the window, stored on my Dropbox
@@ -187,6 +200,20 @@ public class SkinGetter extends JFrame {
 			new SkinGetter();
 		}
 		
+	}
+	
+	public static String getSavingPosition(){
+		//We create a JFileChooser, starting at the user default directory
+		JFileChooser fle = new JFileChooser(System.getProperty("user.home"));
+		//we tell we only want files
+		fle.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		//and then we show the dialog
+		int re = fle.showSaveDialog(SKIN_GETTER);
+		//we check if everything went right
+		if(re==JFileChooser.APPROVE_OPTION)
+			return fle.getSelectedFile().getAbsolutePath();//And we return the absolute path of the folder
+		
+		return "NOWHERE";
 	}
 
 }
