@@ -211,7 +211,7 @@ public class SkinGetter extends JFrame {
 		int re = fle.showSaveDialog(SKIN_GETTER);
 		//we check if everything went right
 		if(re==JFileChooser.APPROVE_OPTION)
-			return fle.getSelectedFile().getAbsolutePath();//And we return the absolute path of the folder
+			return fle.getSelectedFile().getAbsolutePath()+"/";//And we return the absolute path of the folder
 		
 		return "NOWHERE";
 	}
