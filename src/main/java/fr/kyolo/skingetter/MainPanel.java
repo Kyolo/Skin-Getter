@@ -1,4 +1,4 @@
-package fr.kyolo.skinGetter;
+package fr.kyolo.skingetter;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -1,4 +1,4 @@
-package fr.kyolo.skinGetter;
+package fr.kyolo.skingetter;
 
 import java.awt.Image;
 import java.awt.image.RenderedImage;
