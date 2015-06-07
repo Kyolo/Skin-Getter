@@ -121,51 +121,36 @@ public class SkinGetter extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//We prepare the file which will hold the skin
-				File toSerialize = new File(System.getProperty("user.home") + "/Pictures/" + usernameTextField.getText() + ".png");
+				
+				String where = System.getProperty("user.home") + "/Pictures/";
 				
 				//(WIP) JOptionPane.showInputDialog(skg, "Where the file will be saved ?", "Save", JOptionPane.)
 				
-				//We check if the file already exist
-				if(!toSerialize.exists()){
-					//And if it doesn't...
-					try {
-						toSerialize.createNewFile(); //We create the file
-						ImageIO.write((RenderedImage) skin, "PNG", toSerialize); //We save it
-						usernameTextField.setText("");//We clear the JTextField
-					JOptionPane.showMessageDialog(SkinGetter.SKIN_GETTER, "Save done !", null, JOptionPane.INFORMATION_MESSAGE); //And we tell it's done
-					} catch (IOException e) {
-						//In case of error, we warn the user and print the StackTrace in the console
-						JOptionPane.showMessageDialog(SkinGetter.SKIN_GETTER, "An error has been occured during saving. Please try again", "Error", JOptionPane.ERROR_MESSAGE);
-						e.printStackTrace();
-					}
-				}
-				else{
-					//If there is already a file by the given name, we try the same things for an other name
-					for(int i=2;i<20;i++){
-						File toSerialize2 = new File(System.getProperty("user.home") + "/Pictures/" + usernameTextField.getText() + " (" + i + ")" + ".png");
+				
+				//If there is already a file by the given name, we try the same things for an other name
+				for(int i=0;i<Integer.MAX_VALUE;i++){
+					String fileName = usernameTextField.getText()+(i==0 ? "":("("+i+")"));
+					File toSerialize = new File(where + fileName + ".png");
+					
+					if(!toSerialize.exists()){
 						
-						if(!toSerialize2.exists()){
+						try {
+							toSerialize.createNewFile();
+							ImageIO.write((RenderedImage) skin, "PNG", toSerialize);
+							usernameTextField.setText("");
+							JOptionPane.showMessageDialog(SkinGetter.SKIN_GETTER, "Save done !", null, JOptionPane.INFORMATION_MESSAGE);
 							
-							try {
-								toSerialize2.createNewFile();
-								ImageIO.write((RenderedImage) skin, "PNG", toSerialize2);
-								usernameTextField.setText("");
-								JOptionPane.showMessageDialog(SkinGetter.SKIN_GETTER, "Save done !", null, JOptionPane.INFORMATION_MESSAGE);
-								
-							} catch (IOException e) {
-								JOptionPane.showMessageDialog(SkinGetter.SKIN_GETTER, "An error has been occured during saving. Please try again", "Error", JOptionPane.ERROR_MESSAGE);
-								e.printStackTrace();
-							}
-							
-							break;
-							
+						} catch (IOException e) {
+							JOptionPane.showMessageDialog(SkinGetter.SKIN_GETTER, "An error has been occured during saving. Please try again", "Error", JOptionPane.ERROR_MESSAGE);
+							e.printStackTrace();
 						}
+						
+						break;
 						
 					}
 					
 				}
-				
+					
 			}
 			
 		});
