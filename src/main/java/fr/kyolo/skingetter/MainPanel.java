@@ -57,16 +57,17 @@ public class MainPanel extends JPanel implements ActionListener {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
-		int sHeight = skin.getHeight(this);
-		int sWidth = skin.getWidth(this);
-		
-		int width = (sWidth/sHeight)*this.getHeight();
-		
-		// Then drawing the skin if it is not null
-		if(skin != null)
+		//Drawing the skin only if there is a skin to draw
+		if(skin!=null){
+			
+			//First, calculating the skin width
+			int width = (skin.getWidth(this)/skin.getHeight(this))*this.getHeight();
+			
+			// Then drawing the skin
 			g.drawImage(skin, 0, saveButton.getHeight(), width, this.getHeight(), this);
+		}
 	}
-
+	
 	/**
 	 * Sets the skin to draw
 	 * 
@@ -90,5 +91,9 @@ public class MainPanel extends JPanel implements ActionListener {
 		if(e.getSource() == saveButton) {
 			SkinGetter.getInstance().saveSkin();
 		}
+	}
+	
+	public void setTextFieldText(String text){
+		skinDisplayPanel.setTextFieldText(text);
 	}
 }

@@ -60,4 +60,8 @@ public class SouthPanel extends JPanel implements KeyListener, ActionListener {
 		SkinGetter.getInstance().loadSkinFromURL("http://skins.minecraft.net/MinecraftSkins/" + usernameTextField.getText() + ".png");
 	}
 	
+	public void setTextFieldText(String txt){
+		usernameTextField.setText(txt);
+	}
+	
 }

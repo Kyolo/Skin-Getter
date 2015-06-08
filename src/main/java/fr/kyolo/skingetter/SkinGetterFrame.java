@@ -57,12 +57,14 @@ public class SkinGetterFrame extends JFrame {
 		
 		// Then loading the skin
 		SkinGetter.getInstance().loadSkinFromURL("http://skins.minecraft.net/MinecraftSkins/" + plrName + ".png");
+		//And showing the name in the text field
+		mainPanel.setTextFieldText(plrName);
 	}
 	
 	/**
 	 * Returns the current main panel
 	 * 
-	 * @return The current maine panel
+	 * @return The current main panel
 	 */
 	public MainPanel getMainPanel() {
 		return this.mainPanel;
