@@ -57,9 +57,14 @@ public class MainPanel extends JPanel implements ActionListener {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
+		int sHeight = skin.getHeight(this);
+		int sWidth = skin.getWidth(this);
+		
+		int width = (sWidth/sHeight)*this.getHeight();
+		
 		// Then drawing the skin if it is not null
 		if(skin != null)
-			g.drawImage(skin, 0, saveButton.getHeight(), skin.getWidth(this) * SKIN_SCALING, skin.getHeight(this) * SKIN_SCALING, this);
+			g.drawImage(skin, 0, saveButton.getHeight(), width, this.getHeight(), this);
 	}
 
 	/**
