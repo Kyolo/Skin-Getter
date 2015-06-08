@@ -3,7 +3,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 group = 'fr.kyolo.skingetter'
-version = '2.0-SNAPSHOT'
+version = '1.0-RELEASE'
 archivesBaseName = 'skin-getter'
 
 sourceCompatibility = 1.6
